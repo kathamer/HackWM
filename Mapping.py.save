@@ -1,0 +1,29 @@
+from Xlib import X
+
+from Mouse import mouse
+from Colour import color
+
+class mapping:
+    def __init__(self, display, rootWindow):
+        self.display = display
+        self.focusedWindow = self.display.get_input_focus().focus
+        self.mouseHandler = mouse()
+        self.windowList = []
+
+    def handleMapEvent(self, event):
+        event.window.map()  # Map window
+        event.window.configure(stack_mode = X.Above)  # Raise window to top
+        self.windowList.append(event.window)  # Add window to list of open windows
+        self.mouseHandler.configureMouse(event.window)  # Configure mouse events
+
+    def drawBorders(self):
+        colormap = self.display.screen().default_colormap
+
+        for window in self.windowList:
+            window.configure(border_width = 2)
+            if self.display.get_input_focus().focus == window:
+                borderColour = "            else:
+                borderColour = "#000000"
+            borderColour = colormap.alloc_named_colour(borderColour).pixel
+            window.change_attributes(None, border_pixel=borderColour)
+
